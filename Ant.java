@@ -46,17 +46,13 @@ public class Ant extends Creature
     public void act()
     {
         if (carryingFood) {
-            looseLive();
             walkTowardsHome();
             handlePheromoneDrop();
             checkHome();
         }
-        else if (0 < livePoints){
-            looseLive();
-            searchForFood();
-        }
         else {
-            getWorld().removeObject(this);
+            checkLiveStat();
+            searchForFood();
         }
     }
 
@@ -187,4 +183,15 @@ public class Ant extends Creature
         livePoints += CALORIESPERFOOD;
     }
 
+    /**
+     * I do not have sufficient livePoints
+     * */
+    private void checkLiveStat(){
+        if (livePoints > 0){
+            looseLive();
+        }else{
+            super.getHomeHill().antIsDieing();
+            getWorld().removeObject(this);
+        }
+    }
 }
