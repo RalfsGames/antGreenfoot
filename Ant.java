@@ -14,6 +14,12 @@ public class Ant extends Creature
     /** How long do we keep direction after finding pheromones. */
     private static final int PH_TIME = 30;
 
+    /** How much food increases HP´s */
+    private static final int CALORIESPERFOOD = 500;
+
+    /** How much energy is destroyed from walking */
+    private static final int CALORIESBYSTEP = 1;
+
     /** Indicate whether we have any food with us. */
     private boolean carryingFood = false;
 
@@ -22,6 +28,9 @@ public class Ant extends Creature
 
     /** How well do we remember the last pheromone - larger number: more recent */
     private int foundLastPheromone = 0;
+
+    /** How vital are you? - larger number:  */
+    private int livePoints = 1000;
 
     /**
      * Create an ant with a given home hill. The initial speed is zero (not moving).
@@ -37,12 +46,17 @@ public class Ant extends Creature
     public void act()
     {
         if (carryingFood) {
+            looseLive();
             walkTowardsHome();
             handlePheromoneDrop();
             checkHome();
         }
-        else {
+        else if (0 < livePoints){
+            looseLive();
             searchForFood();
+        }
+        else {
+            getWorld().removeObject(this);
         }
     }
 
@@ -104,6 +118,7 @@ public class Ant extends Creature
      */
     private void takeFood(Food food)
     {
+        gainLive();
         carryingFood = true;
         food.takeSome();
         setImage("ant-with-food.gif");
@@ -157,4 +172,19 @@ public class Ant extends Creature
             }
         }
     }
+
+    /**
+     * If we walk, we will lose health points (livePoints).
+     */
+    private void looseLive(){
+        livePoints -= CALORIESBYSTEP;
+    }
+
+    /**
+     * If we eat we will gain live.
+     */
+    private void gainLive(){
+        livePoints += CALORIESPERFOOD;
+    }
+
 }
