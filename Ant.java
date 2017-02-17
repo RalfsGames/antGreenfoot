@@ -15,7 +15,7 @@ public class Ant extends Creature
     private static final int PH_TIME = 30;
 
     /** How much food increases HP´s */
-    private static final int CALORIESPERFOOD = 500;
+    private static final int CALORIESPERFOOD = 100;
 
     /** How much energy is destroyed from walking */
     private static final int CALORIESBYSTEP = 1;
