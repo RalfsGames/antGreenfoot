@@ -14,6 +14,12 @@ public class Ant extends Creature
     /** How long do we keep direction after finding pheromones. */
     private static final int PH_TIME = 30;
 
+    /** */
+    private static final boolean IS_ALIVE = true;
+
+    /** */
+    private static final boolean IS_DEAD = false;
+
     /** How much food increases HP´s */
     private static final int CALORIESPERFOOD = 100;
 
@@ -50,8 +56,7 @@ public class Ant extends Creature
             handlePheromoneDrop();
             checkHome();
         }
-        else {
-            checkLiveStat();
+        else if(checkLiveStat()) {
             searchForFood();
         }
     }
@@ -186,12 +191,16 @@ public class Ant extends Creature
     /**
      * I do not have sufficient livePoints
      * */
-    private void checkLiveStat(){
+    private boolean checkLiveStat(){
         if (livePoints > 0){
             looseLive();
+
+            return Ant.IS_ALIVE;
         }else{
             super.getHomeHill().antIsDieing();
             getWorld().removeObject(this);
+
+            return Ant.IS_DEAD;
         }
     }
 }
