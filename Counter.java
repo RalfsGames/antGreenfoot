@@ -2,7 +2,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, and Greenfoot)
 
 /**
  * Counter that displays some taxt and a number.
- * 
+ *
  * @author Michael Kölling
  * @version 1.1
  */
@@ -36,6 +36,32 @@ public class Counter extends Actor
     public void increment()
     {
         value++;
+        updateImage();
+    }
+
+    /**
+     * Decrement the counter value by one
+     */
+    public void decrement() {
+        decrement(1);
+    }
+    public void decrement(int v){
+        value -= v;
+        updateImage();
+    }
+
+    /**
+     * @return
+     */
+    public int getValue() {
+        return value;
+    }
+
+    /**
+     * @param v
+     */
+    public void setValue(int v) {
+        value = v;
         updateImage();
     }
 

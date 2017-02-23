@@ -8,6 +8,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, and Greenfoot)
  */
 public class Ant extends Creature
 {
+    /** */
+    public static final int ANT_PRICE = 5;
     /** Every how many steps can we place a pheromone drop. */
     private static final int MAX_PH_LEVEL = 18;
 
@@ -21,7 +23,7 @@ public class Ant extends Creature
     private static final boolean IS_DEAD = false;
 
     /** How much food increases HP´s */
-    private static final int CALORIESPERFOOD = 100;
+    private static final int CALORIESPERFOOD = 10;
 
     /** How much energy is destroyed from walking */
     private static final int CALORIESBYSTEP = 1;
@@ -36,7 +38,7 @@ public class Ant extends Creature
     private int foundLastPheromone = 0;
 
     /** How vital are you? - larger number:  */
-    private int livePoints = 1000;
+    private int livePoints = 350;
 
     /**
      * Create an ant with a given home hill. The initial speed is zero (not moving).
@@ -51,13 +53,14 @@ public class Ant extends Creature
      */
     public void act()
     {
-        if (carryingFood) {
-            walkTowardsHome();
-            handlePheromoneDrop();
-            checkHome();
-        }
-        else if(checkLiveStat()) {
-            searchForFood();
+        if (checkLiveStat()) {
+            if (this.carryingFood) {
+                walkTowardsHome();
+                handlePheromoneDrop();
+                checkHome();
+            } else {
+                searchForFood();
+            }
         }
     }
 
@@ -66,8 +69,8 @@ public class Ant extends Creature
      */
     private void searchForFood()
     {
-        if (foundLastPheromone > 0) { // if we can still remember...
-            foundLastPheromone--;
+        if (this.foundLastPheromone > 0) { // if we can still remember...
+            this.foundLastPheromone--;
             walkAwayFromHome();
         }
         else if (smellPheromone()) {
@@ -119,8 +122,7 @@ public class Ant extends Creature
      */
     private void takeFood(Food food)
     {
-        gainLive();
-        carryingFood = true;
+        this.carryingFood = true;
         food.takeSome();
         setImage("ant-with-food.gif");
     }
@@ -130,7 +132,7 @@ public class Ant extends Creature
      */
     private void dropFood()
     {
-        carryingFood = false;
+        this.carryingFood = false;
         getHomeHill().countFood();
         setImage("ant.gif");
     }
@@ -178,23 +180,28 @@ public class Ant extends Creature
      * If we walk, we will lose health points (livePoints).
      */
     private void looseLive(){
-        livePoints -= CALORIESBYSTEP;
+        this.livePoints -= Ant.CALORIESBYSTEP;
     }
 
     /**
      * If we eat we will gain live.
      */
     private void gainLive(){
-        livePoints += CALORIESPERFOOD;
+        this.livePoints += Ant.CALORIESPERFOOD;
+        this.livePoints -= Ant.CALORIESBYSTEP;
     }
 
     /**
      * I do not have sufficient livePoints
      * */
     private boolean checkLiveStat(){
-        if (livePoints > 0){
-            looseLive();
 
+        if ((this.livePoints) > 0) {
+            if (this.carryingFood) {
+                this.gainLive();
+            } else {
+                this.looseLive();
+            }
             return Ant.IS_ALIVE;
         }else{
             super.getHomeHill().antIsDieing();

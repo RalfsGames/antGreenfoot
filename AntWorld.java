@@ -2,13 +2,17 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, and Greenfoot)
 
 /**
  * The world where ants live.
- * 
+ *
  * @author Michael Kölling
  * @version 1.1
  */
 public class AntWorld extends World
 {
-    public static final int SIZE = 620;
+    public static final int SIZE = 1200;
+
+    private boolean notCreate = true;
+
+    private Counter AntsLivingCounter;
 
     /**
      * Create a new world. It will be initialised with a few ant hills
@@ -18,13 +22,13 @@ public class AntWorld extends World
     {
         super(SIZE, SIZE, 1);
         setPaintOrder(Ant.class, Pheromone.class, AntHill.class, Food.class);
-        setup2();
+        setup4();
     }
 
     /**
      * Create world contents: one ant hill and food.
      */
-    public void setup1()
+    private void setup1()
     {
         removeObjects(getObjects(null));  // remove all existing objects
         addObject(new AntHill(70), SIZE / 2, SIZE / 2);
@@ -39,7 +43,7 @@ public class AntWorld extends World
     /**
      * Create world contents: two ant hills and food.
      */
-    public void setup2()
+    private void setup2()
     {
         removeObjects(getObjects(null));  // remove all existing objects
         addObject(new AntHill(40), 506, 356);
@@ -59,7 +63,7 @@ public class AntWorld extends World
     /**
      * Create world contents: two ant hills and food.
      */
-    public void setup3()
+    private void setup3()
     {
         removeObjects(getObjects(null));  // remove all existing objects
         addObject(new AntHill(40), 576, 134);
@@ -73,5 +77,43 @@ public class AntWorld extends World
         addObject(new Food(), 339, 342);
         addObject(new Food(), 593, 340);
         addObject(new Food(), 487, 565);
+    }
+
+    private void setup4() {
+        removeObjects(getObjects(null));
+
+        addObject(new AntHill(40), (SIZE / 3), (SIZE / 3));
+
+        for (int i = 0; i < (Greenfoot.getRandomNumber(40) + 4); i++) {
+            addObject(new Food(), Greenfoot.getRandomNumber(SIZE), Greenfoot.getRandomNumber(SIZE));
+        }
+    }
+
+    public void act(){
+        if (notCreate) {
+            addLivingAnt();
+            for (AntHill o : getObjects(AntHill.class)) {
+                o.create();
+                notCreate = false;
+            }
+        }
+        spawnFood();
+    }
+
+    private void spawnFood(){
+        if (Greenfoot.getRandomNumber(10000) < 10){
+            addObject(new Food(), Greenfoot.getRandomNumber(SIZE) + 1 , Greenfoot.getRandomNumber(SIZE) + 1);
+        }
+    }
+
+    public void addLivingAnt(){
+        if(AntsLivingCounter == null)
+        {
+            AntsLivingCounter = new Counter("Living Ants: ");
+            int x = SIZE - 100;
+            int y = SIZE - 100 ;
+
+            addObject(AntsLivingCounter, x, y);
+        }
     }
 }

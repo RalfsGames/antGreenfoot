@@ -11,8 +11,8 @@ public class AntHill extends Actor
     /** Number of ants that have come out so far. */
     private int ants = 0;
 
-    /** Total number of ants in this hill. */
-    private int maxAnts = 40;
+    /** */
+    private int food;
 
     /** Counter to show how much food have been collected so far. */
     private Counter foodCounter;
@@ -20,29 +20,68 @@ public class AntHill extends Actor
     /**
      * Constructor for ant hill with default number of ants (40).
      */
-    public AntHill()
-    {
+    public AntHill() {
+        this(40, 20);
+    }
+
+    /**
+     * Constructor with default value of food = 20;
+     *
+     * @param numberOfAnts
+     */
+    public AntHill(int numberOfAnts) {
+        this(numberOfAnts, 20);
     }
 
     /**
      * Construct an ant hill with a given number of ants.
      */
-    public AntHill(int numberOfAnts)
-    {
-        maxAnts = numberOfAnts;
+    public AntHill(int numberOfAnts, int food) {
+        // Erzeuge alle Ameisen
+        ants = numberOfAnts;
+        this.food = food;
+    }
+
+    public void create(){
+
+        for (int i = 0; i <= ants; i++) {
+            getWorld().addObject(new Ant(this), getX(), getY());
+        }
     }
 
     /**
-     * Act: If there are still ants left inside, see whether one should come out.
+     * Act:
      */
     public void act()
     {
-        if(ants < maxAnts)
+        handleCounter();
+        spawnAnt();
+    }
+
+    private void handleCounter() {
+        if(foodCounter == null)
         {
-            if(Greenfoot.getRandomNumber(100) < 10)
+            foodCounter = new Counter("Food: ");
+            int x = getX();
+            int y = getY() + getImage().getWidth()/2 + 8;
+
+            foodCounter.setValue(this.food);
+
+            getWorld().addObject(foodCounter, x, y);
+        }
+    }
+
+    /**
+     * possibly spawn an ant
+     */
+    private void spawnAnt() {
+        if(Ant.ANT_PRICE <= foodCounter.getValue())
+        {
+            if(Greenfoot.getRandomNumber(1000) < 10)
             {
                 getWorld().addObject(new Ant(this), getX(), getY());
                 ants++;
+                foodCounter.decrement(Ant.ANT_PRICE);
             }
         }
     }
@@ -52,14 +91,6 @@ public class AntHill extends Actor
      */
     public void countFood()
     {
-        if(foodCounter == null)
-        {
-            foodCounter = new Counter("Food: ");
-            int x = getX();
-            int y = getY() + getImage().getWidth()/2 + 8;
-
-            getWorld().addObject(foodCounter, x, y);
-        }
         foodCounter.increment();
     }
 
