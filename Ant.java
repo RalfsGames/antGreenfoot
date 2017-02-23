@@ -14,6 +14,18 @@ public class Ant extends Creature
     /** How long do we keep direction after finding pheromones. */
     private static final int PH_TIME = 30;
 
+    /** */
+    private static final boolean IS_ALIVE = true;
+
+    /** */
+    private static final boolean IS_DEAD = false;
+
+    /** How much food increases HP´s */
+    private static final int CALORIESPERFOOD = 100;
+
+    /** How much energy is destroyed from walking */
+    private static final int CALORIESBYSTEP = 1;
+
     /** Indicate whether we have any food with us. */
     private boolean carryingFood = false;
 
@@ -22,6 +34,9 @@ public class Ant extends Creature
 
     /** How well do we remember the last pheromone - larger number: more recent */
     private int foundLastPheromone = 0;
+
+    /** How vital are you? - larger number:  */
+    private int livePoints = 1000;
 
     /**
      * Create an ant with a given home hill. The initial speed is zero (not moving).
@@ -41,7 +56,7 @@ public class Ant extends Creature
             handlePheromoneDrop();
             checkHome();
         }
-        else {
+        else if(checkLiveStat()) {
             searchForFood();
         }
     }
@@ -104,6 +119,7 @@ public class Ant extends Creature
      */
     private void takeFood(Food food)
     {
+        gainLive();
         carryingFood = true;
         food.takeSome();
         setImage("ant-with-food.gif");
@@ -155,6 +171,36 @@ public class Ant extends Creature
             if (ph.getX() == getX() && ph.getY() == getY()) {
                 foundLastPheromone = PH_TIME;
             }
+        }
+    }
+
+    /**
+     * If we walk, we will lose health points (livePoints).
+     */
+    private void looseLive(){
+        livePoints -= CALORIESBYSTEP;
+    }
+
+    /**
+     * If we eat we will gain live.
+     */
+    private void gainLive(){
+        livePoints += CALORIESPERFOOD;
+    }
+
+    /**
+     * I do not have sufficient livePoints
+     * */
+    private boolean checkLiveStat(){
+        if (livePoints > 0){
+            looseLive();
+
+            return Ant.IS_ALIVE;
+        }else{
+            super.getHomeHill().antIsDieing();
+            getWorld().removeObject(this);
+
+            return Ant.IS_DEAD;
         }
     }
 }
