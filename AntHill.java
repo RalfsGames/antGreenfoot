@@ -8,6 +8,9 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, and Greenfoot)
  */
 public class AntHill extends Actor
 {
+    public static final int DEFAULTNUMBER_ANTS = 40;
+    public static final int DEFAULT_FOODVALUE = 20;
+
     /** Number of ants that have come out so far. */
     private int ants = 0;
 
@@ -24,13 +27,17 @@ public class AntHill extends Actor
      */
     private AntWorld antWorld;
 
+    /**
+     * = true if not created;
+     * = false if initization is completed; => foodcounter is created & default number of ants is spawned;
+     */
     private boolean notCreated = true;
 
     /**
      * Constructor for ant hill with default number of ants (40).
      */
     public AntHill() {
-        this(40, 20);
+        this(AntHill.DEFAULTNUMBER_ANTS, AntHill.DEFAULT_FOODVALUE);
     }
 
     /**
@@ -39,7 +46,7 @@ public class AntHill extends Actor
      * @param numberOfAnts
      */
     public AntHill(int numberOfAnts) {
-        this(numberOfAnts, 20);
+        this(numberOfAnts, AntHill.DEFAULT_FOODVALUE);
     }
 
     /**
@@ -51,6 +58,9 @@ public class AntHill extends Actor
         this.food = food;
     }
 
+    /**
+     * Initialize all ANTS && FOODCOUNTER
+     */
     public void create() {
         if (notCreated) {
             if (foodCounter == null) {
@@ -85,14 +95,20 @@ public class AntHill extends Actor
      * possibly spawn an ant
      */
     private void spawnAnt() {
-        if(Ant.ANT_PRICE <= foodCounter.getValue())
-        {
-            if(Greenfoot.getRandomNumber(1000) < 10)
-            {
+
+        if (Queen.PRICE <= foodCounter.getValue()) {
+            if (Greenfoot.getRandomNumber(50) < 10) {
+                getWorld().addObject(new Ant(this), getX(), getY());
+                foodCounter.decrement(Queen.PRICE);
+            }
+        }
+
+        if (Ant.PRICE <= foodCounter.getValue()) {
+            if (Greenfoot.getRandomNumber(1000) < 10 + (this.foodCounter.getValue() * 0.25)) {
                 getWorld().addObject(new Ant(this), getX(), getY());
                 antWorld.AntsLivingCounter.increment();
                 ants++;
-                foodCounter.decrement(Ant.ANT_PRICE);
+                foodCounter.decrement(Ant.PRICE);
             }
         }
     }

@@ -11,7 +11,7 @@ import java.util.Date;
  */
 public class AntWorld extends World
 {
-    public static final int SIZE = 1200;
+    public static final int SIZE = 2000;
 
     protected Counter AntsLivingCounter;
 
@@ -91,7 +91,7 @@ public class AntWorld extends World
 
         addObject(new AntHill(40), (SIZE / 3), (SIZE / 3));
 
-        for (int i = 0; i < (Greenfoot.getRandomNumber(40) + 4); i++) {
+        for (int i = 0; i < (Greenfoot.getRandomNumber(SIZE / 20) + SIZE / 100); i++) {
             addObject(new Food(), Greenfoot.getRandomNumber(SIZE), Greenfoot.getRandomNumber(SIZE));
         }
 
@@ -115,7 +115,10 @@ public class AntWorld extends World
     }
 
     private void spawnFood(){
-        if (Greenfoot.getRandomNumber(10000) < 10){
+
+        //TODO EVALUATE following expression
+        // Greenfoot.getRandomNumber((int) Math.pow(SIZE, 2)) < (int)(SIZE / 100)
+        if ((Greenfoot.getRandomNumber(1000) < 20)) {
             addObject(new Food(), Greenfoot.getRandomNumber(SIZE) + 1 , Greenfoot.getRandomNumber(SIZE) + 1);
         }
     }
