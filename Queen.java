@@ -45,11 +45,13 @@ public class Queen extends Creature {
 
     private void spawnHill() {
         if ((LP / randomLength) < Queen.maxANTSinHILL) {
+            //FIXME
             getWorld().addObject(new AntHill(Queen.maxANTSinHILL, AntHill.DEFAULT_FOODVALUE), getX(), getY());
             getWorld().removeObject(this);
         } else {
-            getWorld().addObject(new AntHill(AntHill.DEFAULTNUMBER_ANTS, LP / randomLength), getX(), getY());
-            getWorld().removeObject(this);
+            //FIXME
+            super.getWorld().addObject(new AntHill(AntHill.DEFAULTNUMBER_ANTS, LP / randomLength), getX(), getY());
+            super.getWorld().removeObject(this);
         }
     }
 }
