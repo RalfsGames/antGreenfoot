@@ -50,8 +50,8 @@ public class Queen extends Creature {
             getWorld().removeObject(this);
         } else {
             //FIXME
-            super.getWorld().addObject(new AntHill(AntHill.DEFAULTNUMBER_ANTS, LP / randomLength), getX(), getY());
-            super.getWorld().removeObject(this);
+            getWorld().addObject(new AntHill(AntHill.DEFAULTNUMBER_ANTS, LP / randomLength), getX(), getY());
+            getWorld().removeObject(this);
         }
     }
 }
