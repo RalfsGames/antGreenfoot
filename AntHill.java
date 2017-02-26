@@ -11,11 +11,20 @@ public class AntHill extends Actor
     /** Number of ants that have come out so far. */
     private int ants = 0;
 
-    /** */
+    /**
+     * collected Food Value
+     */
     private int food;
 
     /** Counter to show how much food have been collected so far. */
     private Counter foodCounter;
+
+    /**
+     * set WORLD for Interaction
+     */
+    private AntWorld antWorld;
+
+    private boolean notCreated = true;
 
     /**
      * Constructor for ant hill with default number of ants (40).
@@ -42,33 +51,34 @@ public class AntHill extends Actor
         this.food = food;
     }
 
-    public void create(){
+    public void create() {
+        if (notCreated) {
+            if (foodCounter == null) {
+                foodCounter = new Counter("Food: ");
+                int x = getX();
+                int y = getY() + getImage().getWidth() / 2 + 8;
 
-        for (int i = 0; i <= ants; i++) {
-            getWorld().addObject(new Ant(this), getX(), getY());
+                foodCounter.setValue(this.food);
+
+                getWorld().addObject(foodCounter, x, y);
+            }
+
+            antWorld = (AntWorld) getWorld();
+
+            for (int i = 0; i < ants; i++) {
+                getWorld().addObject(new Ant(this), getX(), getY());
+                antWorld.AntsLivingCounter.increment();
+            }
+            notCreated = false;
         }
     }
 
     /**
      * Act:
      */
-    public void act()
-    {
-        handleCounter();
+    public void act() {
+        create();
         spawnAnt();
-    }
-
-    private void handleCounter() {
-        if(foodCounter == null)
-        {
-            foodCounter = new Counter("Food: ");
-            int x = getX();
-            int y = getY() + getImage().getWidth()/2 + 8;
-
-            foodCounter.setValue(this.food);
-
-            getWorld().addObject(foodCounter, x, y);
-        }
     }
 
     /**
@@ -80,6 +90,7 @@ public class AntHill extends Actor
             if(Greenfoot.getRandomNumber(1000) < 10)
             {
                 getWorld().addObject(new Ant(this), getX(), getY());
+                antWorld.AntsLivingCounter.increment();
                 ants++;
                 foodCounter.decrement(Ant.ANT_PRICE);
             }
@@ -89,12 +100,17 @@ public class AntHill extends Actor
     /**
      * Record that we have collected another bit of food.
      */
-    public void countFood()
+    protected void countFood()
     {
         foodCounter.increment();
     }
 
-    public void antIsDieing(){
+    /**
+     * Tell the Hill that one of her ants died;
+     */
+    protected void antIsDieing() {
+        antWorld.AntsLivingCounter.decrement();
+        antWorld.AntsDeadCounter.increment();
         ants--;
     }
 }

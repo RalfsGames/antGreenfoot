@@ -1,5 +1,8 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, and Greenfoot)
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * The world where ants live.
  *
@@ -10,9 +13,13 @@ public class AntWorld extends World
 {
     public static final int SIZE = 1200;
 
-    private boolean notCreate = true;
+    protected Counter AntsLivingCounter;
 
-    private Counter AntsLivingCounter;
+    protected Counter AntsDeadCounter;
+
+    private Counter TimeCounter;
+
+    private Counter Date;
 
     /**
      * Create a new world. It will be initialised with a few ant hills
@@ -87,17 +94,24 @@ public class AntWorld extends World
         for (int i = 0; i < (Greenfoot.getRandomNumber(40) + 4); i++) {
             addObject(new Food(), Greenfoot.getRandomNumber(SIZE), Greenfoot.getRandomNumber(SIZE));
         }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd HH:mm:s");
+        Date = new Counter("Date: " + sdf.format(new Date()));
+        addObject(Date, SIZE - 105, 30);
+
+        TimeCounter = new CounterTime("Time:");
+        addObject(TimeCounter, SIZE - 40, 50);
+
+        AntsLivingCounter = new Counter("Living Ants: ");
+        addObject(AntsLivingCounter, SIZE - 140, 70);
+
+        AntsDeadCounter = new Counter("Dead Ants: ");
+        addObject(AntsDeadCounter, SIZE - 150, 90);
     }
 
     public void act(){
-        if (notCreate) {
-            addLivingAnt();
-            for (AntHill o : getObjects(AntHill.class)) {
-                o.create();
-                notCreate = false;
-            }
-        }
         spawnFood();
+        this.TimeCounter.increment();
     }
 
     private void spawnFood(){
@@ -106,14 +120,4 @@ public class AntWorld extends World
         }
     }
 
-    public void addLivingAnt(){
-        if(AntsLivingCounter == null)
-        {
-            AntsLivingCounter = new Counter("Living Ants: ");
-            int x = SIZE - 100;
-            int y = SIZE - 100 ;
-
-            addObject(AntsLivingCounter, x, y);
-        }
-    }
 }

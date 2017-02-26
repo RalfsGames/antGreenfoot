@@ -51,6 +51,7 @@ public class Ant extends Creature
     /**
      * Do what an ant's gotta do.
      */
+    @Override
     public void act()
     {
         if (checkLiveStat()) {
