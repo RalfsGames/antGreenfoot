@@ -77,7 +77,6 @@ public class AntHill extends Actor
 
             for (int i = 0; i < ants; i++) {
                 getWorld().addObject(new Ant(this), getX(), getY());
-                antWorld.AntsLivingCounter.increment();
             }
             notCreated = false;
         }
@@ -106,7 +105,6 @@ public class AntHill extends Actor
         if (Ant.PRICE <= foodCounter.getValue()) {
             if (Greenfoot.getRandomNumber(1000) < 10 + (this.foodCounter.getValue() * 0.25)) {
                 getWorld().addObject(new Ant(this), getX(), getY());
-                antWorld.AntsLivingCounter.increment();
                 ants++;
                 foodCounter.decrement(Ant.PRICE);
             }
@@ -128,5 +126,9 @@ public class AntHill extends Actor
         antWorld.AntsLivingCounter.decrement();
         antWorld.AntsDeadCounter.increment();
         ants--;
+    }
+
+    protected void newAnt() {
+        antWorld.AntsLivingCounter.increment();
     }
 }

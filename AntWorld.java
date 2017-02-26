@@ -11,7 +11,7 @@ import java.util.Date;
  */
 public class AntWorld extends World
 {
-    public static final int SIZE = 2000;
+    public static final int SIZE = 4000;
 
     protected Counter AntsLivingCounter;
 

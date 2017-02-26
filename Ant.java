@@ -26,7 +26,8 @@ public class Ant extends Creature
      * How long do we keep direction after finding pheromones.
      */
     private static final int PH_TIME = 30;
-    private static int MAXLP = 5000;
+    /**  */
+    private static final int MAXLP = 3000;
     /** Indicate whether we have any food with us. */
     private boolean carryingFood = false;
     /** How much pheromone do we have right now. */
@@ -41,6 +42,7 @@ public class Ant extends Creature
      */
     public Ant(AntHill home) {
         setHomeHill(home);
+        home.newAnt();
     }
 
     @Deprecated
